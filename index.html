@@ -1,0 +1,2619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA Review Assistant · Homeowner Experience Team</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=IBM+Plex+Mono:wght@400;600&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:    #f8fafc; /* slate-50 */
+    --s1:    #ffffff; /* white */
+    --s2:    #f1f5f9; /* slate-100 */
+    --br:    #e2e8f0; /* slate-200 */
+    --br2:   #cbd5e1; /* slate-300 */
+    --acc:   #FF6153; /* Angi Coral Red */
+    --acc2:  #E04B3E; /* Darker Angi Coral Red */
+    --t1:    #0f172a; /* slate-900 */
+    --t2:    #475569; /* slate-600 */
+    --t3:    #94a3b8; /* slate-400 */
+    --green: #22c55e; /* green-500 */
+    --amber: #fbbf24; /* amber-500 */
+    --red:   #ef4444; /* red-500 */
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--t1);
+    font-family: 'Sora', sans-serif;
+    min-height: 100vh;
+    padding: 24px 28px;
+  }
+
+  /* ── Top bar ────────────────────────────────────── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--br);
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .brand { display: flex; align-items: center; gap: 12px; }
+
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .logo-text {
+    font-family: 'Sora', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    color: var(--acc);
+    letter-spacing: -0.8px;
+    display: inline-flex;
+    align-items: flex-end;
+    line-height: 1;
+  }
+
+  .logo-text-desc {
+    margin-left: 8px;
+    border-left: 1px solid var(--br);
+    padding-left: 12px;
+  }
+
+  .brand-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--t1);
+  }
+
+  .brand-sub {
+    font-size: 11px;
+    color: var(--t2);
+    margin-top: 1px;
+  }
+
+  /* ── Grid ───────────────────────────────────────── */
+  .grid {
+    display: grid;
+    grid-template-columns: 420px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Panel ──────────────────────────────────────── */
+  .panel {
+    background: var(--s1);
+    border: 1px solid var(--br);
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.02);
+  }
+
+  .panel-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--t3);
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+
+  /* ── Form ───────────────────────────────────────── */
+  .field-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--t2);
+    margin-bottom: 7px;
+  }
+
+  .field-group {
+    margin-bottom: 14px;
+  }
+
+  select, textarea {
+    width: 100%;
+    background: var(--s1);
+    border: 1px solid var(--br);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    color: var(--t1);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238899aa'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 36px;
+  }
+
+  select option { background: var(--s1); }
+  select:focus, textarea:focus {
+    border-color: var(--acc);
+    box-shadow: 0 0 0 2px rgba(255, 97, 83, 0.15);
+  }
+
+  textarea {
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  textarea::placeholder { color: var(--t3); }
+
+  .ta-context { min-height: 90px; }
+  .ta-response { min-height: 110px; }
+  .ta-policy { min-height: 70px; }
+
+  .btn-review {
+    width: 100%;
+    padding: 13px;
+    background: var(--acc);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .btn-review:hover:not(:disabled) { background: var(--acc2); }
+  .btn-review:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ── Onboarding Guide ───────────────────────────── */
+  .guide-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    width: 100%;
+    max-width: 640px;
+    text-align: left;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 600px) {
+    .guide-steps { grid-template-columns: 1fr; }
+  }
+
+  .guide-step {
+    background: var(--bg);
+    border: 1px solid var(--br);
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .guide-icon {
+    color: var(--acc);
+    font-size: 18px;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+
+  .guide-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--t1);
+    margin-bottom: 4px;
+  }
+
+  .guide-desc {
+    font-size: 11px;
+    color: var(--t2);
+    line-height: 1.5;
+  }
+
+  /* ── States ─────────────────────────────────────── */
+  .centered-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 360px;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .empty-icon { font-size: 34px; opacity: 0.18; }
+
+  .empty-text {
+    font-size: 13px;
+    color: var(--t2);
+    max-width: 220px;
+    line-height: 1.65;
+  }
+
+  .empty-hint {
+    font-size: 11px;
+    color: var(--t3);
+    max-width: 240px;
+    line-height: 1.55;
+  }
+
+  .spinner {
+    width: 22px; height: 22px;
+    border: 2px solid var(--br2);
+    border-top-color: var(--acc);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text { font-size: 13px; color: var(--t2); }
+
+  .error-box {
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 9px;
+    padding: 14px 16px;
+    color: var(--red);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  /* ── Results ────────────────────────────────────── */
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .results-inner { animation: fadeSlideIn 0.3s ease; }
+
+  .score-block {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px;
+    background: var(--bg);
+    border-radius: 10px;
+    margin-bottom: 18px;
+    border: 1px solid var(--br);
+  }
+
+  .big-score {
+    font-family: 'Fraunces', serif;
+    font-size: 52px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .score-verdict {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-weight: 600;
+    margin-top: 5px;
+  }
+
+  .score-meta { flex: 1; min-width: 0; }
+
+  .case-badge {
+    font-size: 11px;
+    background: var(--s1);
+    border: 1px solid var(--br2);
+    border-radius: 99px;
+    padding: 3px 10px;
+    color: var(--t2);
+    display: inline-block;
+    margin-bottom: 7px;
+  }
+
+  .score-desc { font-size: 13px; color: var(--t2); }
+  .score-denom { font-size: 11px; color: var(--t3); }
+
+  .legal-flag {
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 9px;
+    padding: 11px 14px;
+    color: var(--red);
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  /* ── Criteria ───────────────────────────────────── */
+  .criteria-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+
+  .criterion {
+    background: var(--bg);
+    border: 1px solid var(--br);
+    border-radius: 10px;
+    padding: 13px 15px;
+  }
+
+  .crit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .crit-name {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--t2);
+    font-weight: 600;
+  }
+
+  .crit-score {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .bar-track {
+    height: 4px;
+    background: var(--br);
+    border-radius: 2px;
+    margin-bottom: 9px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.55s ease;
+  }
+
+  .crit-obs {
+    font-size: 12px;
+    color: var(--t2);
+    line-height: 1.6;
+  }
+
+  /* ── Pills ──────────────────────────────────────── */
+  .section-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--t3);
+    font-weight: 600;
+    margin: 16px 0 9px;
+  }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 7px; }
+
+  .pill {
+    font-size: 12px;
+    padding: 4px 11px;
+    border-radius: 99px;
+    line-height: 1.4;
+  }
+
+  .pill-green {
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+  }
+
+  .pill-amber {
+    background: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fde68a;
+  }
+
+  /* ── Draft feedback ─────────────────────────────── */
+  .draft-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 18px 0 9px;
+  }
+
+  .draft-textarea {
+    width: 100%;
+    background: #ffffff !important;
+    border: 1px solid var(--acc) !important;
+    border-radius: 10px;
+    padding: 13px 14px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--t1) !important;
+    min-height: 120px;
+    resize: vertical;
+    outline: none;
+    margin-bottom: 0 !important;
+    transition: border-color 0.2s;
+  }
+
+  .draft-textarea:focus { border-color: var(--t2) !important; }
+
+  .btn-copy {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 13px;
+    border: 1px solid var(--br2);
+    border-radius: 7px;
+    background: #ffffff;
+    color: var(--t2);
+    font-family: 'Sora', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .btn-copy:hover { border-color: var(--acc); color: var(--acc); background: #fffafa; }
+  .btn-copy.copied { border-color: var(--green); color: var(--green); background: #f0fdf4; }
+
+  .result-hint {
+    font-size: 11px;
+    color: var(--t3);
+    margin-top: 9px;
+    line-height: 1.5;
+  }
+
+  /* ── Btn spinner ────────────────────────────────── */
+  .btn-spinner {
+    width: 15px; height: 15px;
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  /* ── Workspace Tabs (Top bar toggle) ──────────────── */
+  .workspace-tabs {
+    display: flex;
+    gap: 8px;
+    background: var(--s2);
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid var(--br);
+  }
+  .workspace-tab {
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--t2);
+    cursor: pointer;
+    border-radius: 7px;
+    transition: all 0.2s ease;
+  }
+  .workspace-tab.active {
+    background: var(--s1);
+    color: var(--acc);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  /* ── Template Workspace Layout ──────────────────────── */
+  .library-grid {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 1024px) {
+    .library-grid { grid-template-columns: 1fr; }
+  }
+
+  /* File Uploader and Stats */
+  .uploader-box {
+    border: 2px dashed var(--br2);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    background: var(--bg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .uploader-box:hover, .uploader-box.dragover {
+    border-color: var(--acc);
+    background: #fffafa;
+  }
+  .uploader-icon {
+    font-size: 32px;
+    color: var(--t3);
+    margin-bottom: 10px;
+  }
+  .uploader-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--t1);
+    margin-bottom: 4px;
+  }
+  .uploader-desc {
+    font-size: 11px;
+    color: var(--t3);
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .btn-preload {
+    background: var(--s1);
+    border: 1px solid var(--br2);
+    padding: 8px 14px;
+    border-radius: 7px;
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--t2);
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+  }
+  .btn-preload:hover {
+    border-color: var(--acc);
+    color: var(--acc);
+    background: #fffafa;
+  }
+
+  /* Library Info / Stats Panel */
+  .library-status-card {
+    background: var(--bg);
+    border: 1px solid var(--br);
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 14px;
+  }
+  .status-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--t2);
+  }
+  .status-item:last-child { margin-bottom: 0; }
+  .status-label { font-weight: 500; }
+  .status-value { font-weight: 600; color: var(--t1); }
+
+  /* Inner Workspace Tabs (Browse, Audit, Gap Finder) */
+  .inner-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--br);
+    margin-bottom: 20px;
+    gap: 16px;
+  }
+  .inner-tab {
+    padding: 10px 4px;
+    border: none;
+    background: transparent;
+    font-family: 'Sora', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--t2);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+  }
+  .inner-tab:hover { color: var(--acc); }
+  .inner-tab.active {
+    color: var(--acc);
+  }
+  .inner-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--acc);
+    border-radius: 2px;
+  }
+
+  /* Search & Filter Bar */
+  .search-filter-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .search-input-wrapper {
+    flex: 1;
+    min-width: 240px;
+    position: relative;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--s1);
+    border: 1px solid var(--br);
+    border-radius: 8px;
+    padding: 9px 12px 9px 36px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.2s;
+  }
+  .search-input:focus {
+    border-color: var(--acc);
+    box-shadow: 0 0 0 2px rgba(255, 97, 83, 0.15);
+  }
+  .search-icon-svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: var(--t3);
+  }
+  .filter-select {
+    width: auto;
+    min-width: 180px;
+    margin-bottom: 0 !important;
+  }
+
+  /* Template List & Cards */
+  .template-cards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .template-card {
+    background: var(--s1);
+    border: 1px solid var(--br);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .template-card:hover {
+    border-color: var(--br2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  }
+  .template-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .template-card-title {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--t1);
+  }
+  .template-meta-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .template-section-badge {
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    background: var(--s2);
+    color: var(--t2);
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--br);
+  }
+  .template-use-when {
+    font-size: 12px;
+    color: var(--t2);
+    background: var(--bg);
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--br2);
+    line-height: 1.5;
+  }
+  .template-text-area {
+    background: #fafafa;
+    border: 1px solid var(--br);
+    border-radius: 8px;
+    padding: 14px;
+    font-family: 'Sora', sans-serif;
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: var(--t1);
+    white-space: pre-wrap;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 14px;
+  }
+  .template-card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .card-action-btns {
+    display: flex;
+    gap: 8px;
+  }
+  .btn-card-action {
+    background: var(--s1);
+    border: 1px solid var(--br2);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-family: 'Sora', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--t2);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-card-action:hover {
+    border-color: var(--acc);
+    color: var(--acc);
+    background: #fffafa;
+  }
+  .btn-card-action.primary {
+    background: var(--acc);
+    color: white;
+    border-color: var(--acc);
+  }
+  .btn-card-action.primary:hover {
+    background: var(--acc2);
+    border-color: var(--acc2);
+  }
+
+  /* Duplicate & Tone Warning Badges */
+  .badge-warning {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .badge-warning.tone {
+    background: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fde68a;
+  }
+  .badge-warning.duplicate {
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+  }
+
+  /* Audit Tab UI elements */
+  .audit-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .audit-stat-card {
+    background: var(--s1);
+    border: 1px solid var(--br);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.01);
+  }
+  .audit-stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--t1);
+    margin-bottom: 4px;
+  }
+  .audit-stat-num.red { color: var(--red); }
+  .audit-stat-num.amber { color: var(--amber); }
+  .audit-stat-num.blue { color: #2563eb; }
+  .audit-stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--t2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Audit Section Blocks */
+  .audit-section-block {
+    margin-bottom: 28px;
+  }
+  .audit-section-header {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--t1);
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--br);
+  }
+  .audit-subtext {
+    font-size: 12.5px;
+    color: var(--t2);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  /* Duplicate Card Comparison View */
+  .duplicate-pair-card {
+    background: var(--s1);
+    border: 1px solid var(--br);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .duplicate-pair-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .duplicate-pair-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--t1);
+  }
+  .duplicate-pair-badge {
+    background: #fee2e2;
+    color: var(--red);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .duplicate-split-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 768px) {
+    .duplicate-split-view { grid-template-columns: 1fr; }
+  }
+  .duplicate-split-col {
+    background: var(--bg);
+    border: 1px solid var(--br);
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .duplicate-col-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--t2);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .duplicate-col-text {
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--t1);
+    white-space: pre-wrap;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+  .consolidation-recommendation {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 11.5px;
+    line-height: 1.5;
+  }
+
+  /* Outdated Tone Row */
+  .tone-issue-card {
+    background: var(--s1);
+    border: 1px solid var(--br);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .tone-issue-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .tone-issue-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--t1);
+  }
+  .tone-issue-badge {
+    background: #fffbeb;
+    color: #d97706;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .tone-critique-box {
+    background: #fffbeb;
+    border-left: 3px solid #fbbf24;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #92400e;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .tone-split-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  @media (max-width: 768px) {
+    .tone-split-view { grid-template-columns: 1fr; }
+  }
+  .tone-col-original {
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #991b1b;
+    white-space: pre-wrap;
+  }
+  .tone-col-revised {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #166534;
+    white-space: pre-wrap;
+    position: relative;
+  }
+  .btn-apply-rewrite {
+    margin-top: 8px;
+    background: #22c55e;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-family: 'Sora', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-apply-rewrite:hover {
+    background: #16a34a;
+  }
+
+  /* Gaps List Item */
+  .gap-item-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--br);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .gap-item-row:last-child { border-bottom: none; }
+  .gap-bullet {
+    color: var(--acc);
+    font-weight: bold;
+  }
+  .gap-badge-new {
+    background: #e0f2fe;
+    color: #0369a1;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 6px;
+    display: inline-block;
+  }
+
+  /* Gap Finder tab UI */
+  .gap-finder-container {
+    background: var(--s1);
+    border: 1px solid var(--br);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.01);
+  }
+  .gap-finder-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--t1);
+    margin-bottom: 8px;
+  }
+  .gap-finder-subtitle {
+    font-size: 13px;
+    color: var(--t2);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .gap-finder-textarea {
+    min-height: 120px;
+    margin-bottom: 16px;
+  }
+  .btn-gap-finder {
+    background: var(--acc);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-gap-finder:hover:not(:disabled) {
+    background: var(--acc2);
+  }
+  .btn-gap-finder:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .gap-finder-result {
+    margin-top: 24px;
+    border-top: 1px solid var(--br);
+    padding-top: 24px;
+    animation: fadeSlideIn 0.3s ease;
+  }
+  .gap-result-alert {
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .gap-result-alert.matched {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+  }
+  .gap-result-alert.gap {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+  }
+  .gap-result-template-draft {
+    background: var(--bg);
+    border: 1px solid var(--br);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 12.5px;
+    line-height: 1.6;
+    color: var(--t1);
+    white-space: pre-wrap;
+    margin-bottom: 14px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Top bar ───────────────────────────────────────── -->
+<div class="topbar">
+  <div class="brand">
+    <!-- Angi Logo -->
+    <div class="brand-logo">
+      <img src="angi-logo.png" alt="Angi Logo" style="height: 38px; display: block;">
+    </div>
+    <div class="logo-text-desc">
+      <div class="brand-name">QA Review Assistant</div>
+      <div class="brand-sub">Homeowner Experience · Internal Only</div>
+    </div>
+  </div>
+  
+  <div class="workspace-tabs">
+    <button class="workspace-tab active" id="ws-tab-qa" onclick="switchWorkspace('qa')">QA Response Review</button>
+    <button class="workspace-tab" id="ws-tab-library" onclick="switchWorkspace('library')">Template Library & Audit</button>
+  </div>
+</div>
+
+<div id="workspace-qa">
+<!-- ── Main Grid ─────────────────────────────────────── -->
+<div class="grid">
+
+  <!-- Input Panel -->
+  <div class="panel">
+    <div class="panel-label">Review input</div>
+
+    <div class="field-group">
+      <label class="field-label" for="sample-selector">Select case template</label>
+      <select id="sample-selector" onchange="onSampleChange()">
+        <option value="custom">New / Custom Case</option>
+        <option value="noshow_lost_wages">Sample 1: Contractor No-Show (Lost Wages & Threat)</option>
+        <option value="overcommitted_refund">Sample 2: Refund Dispute (Overcommitted Refund)</option>
+        <option value="property_damage">Sample 3: Property Damage (Unacknowledged Damage & Risk)</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="case-type">Case type</label>
+      <select id="case-type">
+        <option value="">Select a case type…</option>
+        <option>Refund Dispute</option>
+        <option>Contractor No-Show</option>
+        <option>Legal Flag / Liability</option>
+        <option>Service Quality Complaint</option>
+        <option>Scheduling Issue</option>
+        <option>Other Escalation</option>
+      </select>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="case-context">Customer complaint / case context</label>
+      <textarea
+        id="case-context"
+        class="ta-context"
+        placeholder="Paste complaint details here. Describe what went wrong and what the customer is demanding..."
+      ></textarea>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="agent-response">Paste agent response</label>
+      <textarea
+        id="agent-response"
+        class="ta-response"
+        placeholder="Paste the agent's draft response here. This stays internal — AI never writes to or contacts the homeowner directly."
+      ></textarea>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="policy-notes">Policy / escalation notes (optional)</label>
+      <textarea
+        id="policy-notes"
+        class="ta-policy"
+        placeholder="Enter any business rules, refund parameters, or guidelines the agent should have followed..."
+      ></textarea>
+    </div>
+
+    <button class="btn-review" id="btn-review" disabled onclick="runReview()">
+      <span id="btn-label">Run QA review →</span>
+      <div class="btn-spinner" id="btn-spinner" style="display:none"></div>
+    </button>
+  </div>
+
+  <!-- Results Panel -->
+  <div class="panel" id="results-panel">
+
+    <!-- Empty state with Onboarding Guide -->
+    <div class="centered-state" id="state-empty">
+      <div style="font-size: 32px; color: var(--acc); margin-bottom: 8px;">◈</div>
+      <h2 style="font-family: 'Fraunces', serif; color: var(--t1); font-size: 24px; margin-bottom: 8px; font-weight: 700;">
+        QA Review Assistant
+      </h2>
+      <p style="color: var(--t2); font-size: 13px; max-width: 480px; margin-bottom: 24px; line-height: 1.6;">
+        Welcome! This coaching tool helps CX Team Leads evaluate agent responses, grade drafts against the company standard, and generate constructive feedback.
+      </p>
+      
+      <div style="width: 100%; max-width: 640px; text-align: left; margin-bottom: 24px;">
+        <h3 style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--t3); font-weight: 600; margin-bottom: 12px;">
+          Quick Start Guide
+        </h3>
+        
+        <div class="guide-steps">
+          <div class="guide-step">
+             <div class="guide-icon">1</div>
+             <div class="guide-title">Select Template</div>
+             <div class="guide-desc">Choose a pre-made sample or pick 'New/Custom Case' to test your own values.</div>
+          </div>
+          <div class="guide-step">
+             <div class="guide-icon">2</div>
+             <div class="guide-title">Run Review</div>
+             <div class="guide-desc">Click the review button. Llama 3.3 will score the draft on 5 critical criteria.</div>
+          </div>
+          <div class="guide-step">
+             <div class="guide-icon">3</div>
+             <div class="guide-title">Copy Feedback</div>
+             <div class="guide-desc">Review the strengths and coaching points, then copy the auto-generated feedback draft.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 12px 16px; border-radius: 8px; max-width: 540px; display: flex; align-items: flex-start; gap: 10px; text-align: left;">
+        <span style="font-size: 14px; margin-top: 1px;">💡</span>
+        <span style="font-size: 11px; color: #1e3a8a; line-height: 1.5;"><strong>Coaching Disclaimer:</strong> AI suggestions are internal tools. The agent response is a draft to edit — final customer communications remain entirely under human control.</span>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div class="centered-state" id="state-loading" style="display:none">
+      <div class="spinner"></div>
+      <div class="loading-text">Analyzing against rubric…</div>
+    </div>
+
+    <!-- Error state -->
+    <div id="state-error" style="display:none"></div>
+
+    <!-- Results -->
+    <div id="state-results" style="display:none"></div>
+
+  </div>
+</div>
+</div> <!-- End #workspace-qa -->
+
+<div id="workspace-library" style="display:none">
+  <div class="library-grid">
+    <!-- Sidebar -->
+    <div class="panel">
+      <div class="panel-label">Library Upload & Management</div>
+      
+      <!-- Drag and Drop Box -->
+      <div class="uploader-box" id="drop-zone" onclick="document.getElementById('file-input').click()">
+        <div class="uploader-icon">🗂</div>
+        <div class="uploader-title">Upload Template Library</div>
+        <div class="uploader-desc">Drag & drop your <code>.docx</code> or <code>.txt</code> Google Doc export here, or click to browse.</div>
+        <input type="file" id="file-input" style="display:none" accept=".docx,.txt" onchange="handleFileSelect(event)">
+      </div>
+      
+      <button class="btn-preload" id="btn-preload-library" onclick="preloadLibrary()">
+        ⚡ Preload Marcus's Template Library
+      </button>
+      
+      <!-- Library Stats Info -->
+      <div class="library-status-card">
+        <div class="status-item">
+          <span class="status-label">Total Templates</span>
+          <span class="status-value" id="stat-total-templates">0</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">Duplicates Detected</span>
+          <span class="status-value" id="stat-duplicates-count">0</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">Stiff Tone Warnings</span>
+          <span class="status-value" id="stat-tone-warnings">0</span>
+        </div>
+        <div class="status-item">
+          <span class="status-label">Known Gaps Remaining</span>
+          <span class="status-value" id="stat-gaps-count">7</span>
+        </div>
+      </div>
+      
+      <div style="margin-top:16px; font-size:11px; color:var(--t3); line-height:1.5;">
+        💡 You can always work on the Google Doc, export it, and drop it here. The library updates instantly!
+      </div>
+    </div>
+    
+    <!-- Main Content Area -->
+    <div class="panel" style="min-height: 500px;">
+      <!-- Workspace inner tabs -->
+      <div class="inner-tabs">
+        <button class="inner-tab active" id="tab-browse" onclick="switchLibraryTab('browse')">Browse Library</button>
+        <button class="inner-tab" id="tab-audit" onclick="switchLibraryTab('audit')">Audit Reports</button>
+        <button class="inner-tab" id="tab-gap-finder" onclick="switchLibraryTab('gap-finder')">Gap Finder</button>
+      </div>
+      
+      <!-- Browse Tab Content -->
+      <div id="lib-content-browse" class="lib-tab-content">
+        <div class="search-filter-bar">
+          <div class="search-input-wrapper">
+            <svg class="search-icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <input type="text" id="lib-search" class="search-input" placeholder="Search templates by title, use-case, content..." oninput="filterTemplates()">
+          </div>
+          <select id="lib-filter-section" class="filter-select" onchange="filterTemplates()">
+            <option value="all">All Sections</option>
+            <option value="A">Section A — Contractor Issues</option>
+            <option value="B">Section B — Refund & Billing</option>
+            <option value="C">Section C — Escalations & Resolutions</option>
+            <option value="D">Section D — Account & Membership</option>
+            <option value="E">Section E — High-Stakes & Legal</option>
+            <option value="F">Section F — Miscellaneous / Later</option>
+          </select>
+        </div>
+        
+        <div id="templates-list-container" class="template-cards-grid">
+          <div class="centered-state">
+            <div style="font-size: 32px; color: var(--t3); margin-bottom: 8px;">📂</div>
+            <p class="empty-text">No library loaded yet.</p>
+            <p class="empty-hint">Click the "Preload" button or upload Marcus's response template document to get started.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Audit Tab Content -->
+      <div id="lib-content-audit" class="lib-tab-content" style="display:none">
+        <div id="audit-results-container">
+          <div class="centered-state">
+            <div style="font-size: 32px; color: var(--t3); margin-bottom: 8px;">🔬</div>
+            <p class="empty-text">No library loaded yet.</p>
+            <p class="empty-hint">Preload or upload a template document to see duplicates, outdated tone, and gap reports.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Gap Finder Tab Content -->
+      <div id="lib-content-gap-finder" class="lib-tab-content" style="display:none">
+        <div class="gap-finder-container">
+          <div class="gap-finder-title">AI Gap Finder & Template Draftsman</div>
+          <div class="gap-finder-subtitle">
+            Search if a new customer scenario has coverage in the library. If it is an uncovered edge case, the AI confirms the gap and drafts a custom template following Marcus's warm, professional, human voice.
+          </div>
+          
+          <div class="field-group">
+            <label class="field-label" for="gap-scenario-input">Describe the new customer scenario / escalation details</label>
+            <textarea id="gap-scenario-input" class="gap-finder-textarea" placeholder="Example: Customer states the plumber stepped through the ceiling creating a huge hole, and is screaming about dust and structural safety..."></textarea>
+          </div>
+          
+          <button class="btn-gap-finder" id="btn-run-gap-finder" onclick="runGapFinder()">
+            <span id="gap-btn-label">Check Coverage & Draft Template →</span>
+            <div class="btn-spinner" id="gap-btn-spinner" style="display:none"></div>
+          </button>
+          
+          <div id="gap-finder-results-box" style="display:none"></div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Constants ─────────────────────────────────────── */
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const DEFAULT_API_KEY = '';
+
+async function callGroqAPI(messages, model, maxTokens, temperature) {
+  // 1. Try Vercel Serverless Function first
+  try {
+    const vercelRes = await fetch('/api/review', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: model,
+        max_tokens: maxTokens,
+        temperature: temperature,
+        messages: messages
+      })
+    });
+    
+    if (vercelRes.ok) {
+      return await vercelRes.json();
+    }
+    
+    let errMsg = `Server returned status ${vercelRes.status}`;
+    try {
+      const data = await vercelRes.json();
+      errMsg = data.error?.message || data.error || errMsg;
+    } catch (_) {}
+    console.warn("Vercel serverless function failed:", errMsg, "Falling back to direct API call.");
+  } catch (err) {
+    console.warn("Vercel serverless function encountered error:", err.message || err, "Falling back to direct API call.");
+  }
+
+  // 2. Direct client-side fallback
+  const apiKey = localStorage.getItem('groq_api_key') || DEFAULT_API_KEY;
+  if (!apiKey) {
+    throw new Error("No Groq API key found. Please configure the GROQ_API_KEY environment variable on Vercel, or set 'groq_api_key' in your browser's localStorage.");
+  }
+
+  const directRes = await fetch(GROQ_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: model,
+      max_tokens: maxTokens,
+      temperature: temperature,
+      messages: messages
+    })
+  });
+  
+  const data = await directRes.json();
+  if (!directRes.ok) {
+    throw new Error(data.error?.message || `API returned status ${directRes.status}`);
+  }
+  return data;
+}
+
+const SYSTEM_PROMPT = `You are a QA coaching assistant for Marcus, a CX Team Lead at Angi. He manages a team of 6 agents who handle escalated homeowner complaints. You help Marcus review agent responses to identify coaching opportunities.
+
+This is entirely internal — you are NOT writing customer-facing content. You are analyzing whether the agent's response meets Marcus's coaching standards, taking into account the customer complaint/context and the policy/escalation guidelines.
+
+Evaluate the agent response on 5 criteria, taking into account the customer complaint/context and the policy/escalation notes. Return ONLY a valid JSON object with no preamble, no markdown backticks, no commentary. Raw JSON only.
+
+Scoring: 1=Needs significant work, 2=Below standard, 3=Meets standard, 4=Good, 5=Excellent
+
+Return this exact JSON structure:
+{
+  "criteria": [
+    {
+      "name": "Tone & Professionalism",
+      "score": <integer 1-5>,
+      "observation": "<Specific, concrete observation. Reference exact phrases from the response where helpful. Did the agent remain professional? How did they handle the homeowner's anger or escalation threats? What worked? What didn't?>"
+    },
+    {
+      "name": "Empathy & Acknowledgment",
+      "score": <integer 1-5>,
+      "observation": "<Was the acknowledgment of the homeowner's specific frustration (e.g. missed work, lost wages) genuine, or generic/formulaic? Did it address the core complaint details? Quote the relevant phrases.>"
+    },
+    {
+      "name": "Resolution Clarity",
+      "score": <integer 1-5>,
+      "observation": "<Did the agent clearly state what happens next and when? Is the timeline realistic? Note any missing follow-through details.>"
+    },
+    {
+      "name": "Policy Accuracy",
+      "score": <integer 1-5>,
+      "observation": "<Did the agent follow the provided policy/escalation notes? Did they make unapproved refund promises, fail to flag escalations, or violate specific policy rules? Detail any gaps.>"
+    },
+    {
+      "name": "Legal Risk",
+      "score": <integer 1-5>,
+      "flagged": <true if any legal risk or unapproved commitment detected, false if none>,
+      "observation": "<If flagged=true: quote the EXACT phrase(s) creating exposure (e.g. admitting full liability, promising legal resolutions) and explain the risk. If flagged=false: briefly confirm the response is clear.>"
+    }
+  ],
+  "overall_score": <average of all 5 scores rounded to one decimal place>,
+  "strengths": ["<concise strength 1>", "<concise strength 2>"],
+  "coaching_points": ["<specific, actionable coaching point 1>", "<specific, actionable coaching point 2>"],
+  "draft_feedback": "<3-5 sentences written as Marcus would write to his agent. Direct, specific, constructive. Address how they handled the complaint and policy. Reference specific phrases or moments from their response. Sound like an experienced CX manager who respects his team. Do NOT start with 'Great job', 'Hi', 'I', or any generic opener. Start mid-thought.>"
+}`;
+
+/* ── Sample Templates Data ─────────────────────────── */
+const SAMPLES = {
+  noshow_lost_wages: {
+    type: "Contractor No-Show",
+    context: "Homeowner says the contractor no-showed twice for a kitchen plumbing repair. They took time off work both days and say they lost wages. They are angry, asking for a refund, and threatening to post publicly if Angi does not resolve it.",
+    response: "Hi, sorry for the inconvenience. We understand this is frustrating. I checked your case and can see the contractor missed the appointment twice. I am going to escalate this to our resolution team today and ask them to review refund eligibility and next steps. I will also document the missed appointments so you do not have to repeat the story again. We will follow up within 24 hours with an update.",
+    policy: "Do not promise refunds unless approved. Legal threats or public escalation threats should be reviewed by a team lead. Maintain empathy, avoid blame, and provide a clear next step."
+  },
+  overcommitted_refund: {
+    type: "Refund Dispute",
+    context: "Customer is demanding a $500 refund because the tile work has slightly uneven grout lines. They are screaming at the agent and demanding immediate cash refund.",
+    response: "I am so sorry the contractor did a poor job on the tiling. Since you are so upset, I will go ahead and refund the full $500 to your credit card right away. You don't have to worry about a thing, I'll make sure it goes through today.",
+    policy: "Refunds over $100 require manager approval. Agent should request photos of the work before discussing compensation. Empathy should remain neutral and professional without admitting liability."
+  },
+  property_damage: {
+    type: "Legal Flag / Liability",
+    context: "Homeowner states that during a bathroom leak repair, the plumber stepped through the ceiling of the living room below, causing a massive hole and ceiling dust everywhere. The homeowner is extremely stressed and worried about safety.",
+    response: "We can help you schedule a ceiling repair specialist if you want to book another service through Angi. Since the original plumber is independent, you will need to contact them directly to talk about the hole in your ceiling. Let me know if you want to book that new appointment.",
+    policy: "Any property damage claims must be immediately flagged as Legal/Liability. Agent must never direct the customer to deal with property damage alone if it was caused by an Angi-referred pro; escalate to the Damage Resolution Team. Express sincere empathy for the home damage."
+  }
+};
+
+function onSampleChange() {
+  const sel = document.getElementById('sample-selector').value;
+  if (sel === 'custom') {
+    // Clear fields for custom input
+    document.getElementById('case-type').value = "";
+    document.getElementById('case-context').value = "";
+    document.getElementById('agent-response').value = "";
+    document.getElementById('policy-notes').value = "";
+  } else {
+    // Fill from template
+    const sample = SAMPLES[sel];
+    if (sample) {
+      document.getElementById('case-type').value = sample.type;
+      document.getElementById('case-context').value = sample.context;
+      document.getElementById('agent-response').value = sample.response;
+      document.getElementById('policy-notes').value = sample.policy;
+    }
+  }
+  updateBtn();
+}
+
+/* ── Helpers ───────────────────────────────────────── */
+function scoreColors(score) {
+  if (score >= 4) return { text: '#22c55e', bar: '#22c55e' };
+  if (score >= 3) return { text: '#fbbf24', bar: '#fbbf24' };
+  return         { text: '#ef4444', bar: '#ef4444' };
+}
+
+function scoreVerdict(s) {
+  if (s >= 4.5) return 'Excellent';
+  if (s >= 3.5) return 'Good';
+  if (s >= 2.5) return 'Meets standard';
+  if (s >= 1.5) return 'Below standard';
+  return 'Needs work';
+}
+
+function showState(id) {
+  ['state-empty', 'state-loading', 'state-error', 'state-results'].forEach(s => {
+    const el = document.getElementById(s);
+    el.style.display = 'none';
+  });
+  const target = document.getElementById(id);
+  target.style.display = (id === 'state-empty' || id === 'state-loading')
+    ? 'flex' : 'block';
+}
+
+function setLoading(on) {
+  const btn = document.getElementById('btn-review');
+  btn.disabled = on;
+  document.getElementById('btn-label').style.display  = on ? 'none' : '';
+  document.getElementById('btn-spinner').style.display = on ? 'block' : 'none';
+}
+
+/* ── Enable button when form is filled ─────────────── */
+function updateBtn() {
+  const ct   = document.getElementById('case-type').value;
+  const ctx  = document.getElementById('case-context').value.trim();
+  const resp = document.getElementById('agent-response').value.trim();
+  document.getElementById('btn-review').disabled = (!ct || ctx.length < 20 || resp.length < 20);
+}
+
+document.getElementById('case-type').addEventListener('change', updateBtn);
+document.getElementById('case-context').addEventListener('input',  updateBtn);
+document.getElementById('agent-response').addEventListener('input',  updateBtn);
+
+// Run initially to validate prefilled values
+updateBtn();
+
+/* ── Robust JSON Extractor ─────────────────────────── */
+function extractJSON(text) {
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+  if (start !== -1 && end !== -1 && end > start) {
+    return text.substring(start, end + 1);
+  }
+  return text.trim();
+}
+
+/* ── Render results ────────────────────────────────── */
+function renderResults(data, caseType) {
+  const ov  = parseFloat(data.overall_score) || 0;
+  const oc  = scoreColors(ov);
+
+  const legal   = data.criteria.find(c => c.name === 'Legal Risk');
+  const flagged = legal && legal.flagged;
+
+  const criteriaHTML = data.criteria.map(c => {
+    const col = scoreColors(c.score);
+    const pct = ((c.score / 5) * 100).toFixed(0);
+    return `
+      <div class="criterion">
+        <div class="crit-row">
+          <span class="crit-name">${escHtml(c.name)}</span>
+          <span class="crit-score" style="color:${col.text}">${c.score}</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${pct}%; background:${col.bar}"></div>
+        </div>
+        <div class="crit-obs">${escHtml(c.observation)}</div>
+      </div>`;
+  }).join('');
+
+  const strHTML  = (data.strengths      || []).map(s => `<span class="pill pill-green">${escHtml(s)}</span>`).join('');
+  const cptHTML  = (data.coaching_points || []).map(p => `<span class="pill pill-amber">${escHtml(p)}</span>`).join('');
+  const draft    = escHtml(data.draft_feedback || '');
+
+  document.getElementById('state-results').innerHTML = `
+    <div class="results-inner">
+      <div class="panel-label">Review results</div>
+
+      <div class="score-block">
+        <div>
+          <div class="big-score" style="color:${oc.text}">${ov.toFixed(1)}</div>
+          <div class="score-verdict" style="color:${oc.text}">${scoreVerdict(ov)}</div>
+        </div>
+        <div class="score-meta">
+          <div class="case-badge">${escHtml(caseType)}</div>
+          <div class="score-desc">Overall QA score <span class="score-denom">/ 5.0</span></div>
+        </div>
+      </div>
+
+      ${flagged ? `
+      <div class="legal-flag">
+        <span style="flex-shrink:0">⚠</span>
+        <span>Escalation flag detected — check the Policy/Legal observations below for details.</span>
+      </div>` : ''}
+
+      <div class="panel-label">Rubric breakdown</div>
+      <div class="criteria-list">${criteriaHTML}</div>
+
+      <div class="section-title">Strengths</div>
+      <div class="pills">${strHTML}</div>
+
+      <div class="section-title">Coaching points</div>
+      <div class="pills">${cptHTML}</div>
+
+      <div class="draft-header">
+        <div class="section-title" style="margin:0">Draft feedback for agent</div>
+        <button class="btn-copy" id="copy-btn" onclick="copyDraft()">Copy</button>
+      </div>
+      <textarea class="draft-textarea" id="draft-ta">${draft}</textarea>
+      <div class="result-hint">Edit freely. The final feedback is always yours to write and send.</div>
+    </div>`;
+
+  showState('state-results');
+}
+
+/* ── Escape HTML to avoid XSS in innerHTML ─────────── */
+function escHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/* ── Copy draft feedback ───────────────────────────── */
+function copyDraft() {
+  const ta  = document.getElementById('draft-ta');
+  const btn = document.getElementById('copy-btn');
+  navigator.clipboard.writeText(ta.value).then(() => {
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(() => {
+    /* Fallback for browsers without clipboard API */
+    ta.select();
+    document.execCommand('copy');
+  });
+}
+
+/* ── Main review call ──────────────────────────────── */
+async function runReview() {
+  const caseType  = document.getElementById('case-type').value;
+  const complaint = document.getElementById('case-context').value.trim();
+  const response  = document.getElementById('agent-response').value.trim();
+  const policy    = document.getElementById('policy-notes').value.trim();
+
+  setLoading(true);
+  showState('state-loading');
+
+  try {
+    const data = await callGroqAPI([
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user',   content: `Case Type: ${caseType}\n\nCustomer Complaint / Context:\n${complaint}\n\nAgent Response:\n${response}${policy ? `\n\nPolicy / Escalation Notes:\n${policy}` : ''}` }
+    ], 'llama-3.3-70b-versatile', 1600, 0.2);
+
+    const raw   = data.choices[0].message.content;
+    const clean = extractJSON(raw);
+    const parsed = JSON.parse(clean);
+
+    renderResults(parsed, caseType);
+
+  } catch (err) {
+    const msg = err instanceof SyntaxError
+      ? 'Could not parse the AI response. Try running the review again.'
+      : (err.message || 'Something went wrong. Check your Groq API key and try again.');
+
+    document.getElementById('state-error').innerHTML = `
+      <div class="error-box">⚠ ${escHtml(msg)}</div>
+      <button class="btn-review" style="background:var(--s2); color:var(--t1); border:1px solid var(--br); width:auto; margin-top:10px;" onclick="showState('state-empty')">← Go back</button>`;
+    showState('state-error');
+  } finally {
+    setLoading(false);
+  }
+}
+
+/* ── Workspace / Library Logic ─────────────────────── */
+let templates = [];
+
+const STATIC_KNOWN_GAPS = [
+  "Contractor accused of theft or missing items from the homeowner's property",
+  "Non-English speaking homeowner who needs communication in another language",
+  "Dangerous or unsafe work completed (electrical hazard, structural damage, gas line concern)",
+  "Repeat escalation — same homeowner filing 3+ separate complaints",
+  "HOA or condo board involvement in a dispute (e.g., work not approved by building)",
+  "Natural disaster or force majeure rescheduling (storm, flood, wildfire displacement)",
+  "Contractor injury on premises — liability and worker's comp implications"
+];
+
+const STATIC_DUPLICATES = [
+  {
+    title: "Contractor No-Show Redundancy",
+    t1: 3,
+    t2: 47,
+    rec: "Consolidate into Template 3. Delete Template 47, which is a redundant copy added later in November 2022."
+  },
+  {
+    title: "Partial Refund Approved Redundancy",
+    t1: 20,
+    t2: 68,
+    rec: "Consolidate into Template 20. Delete Template 68, which is a duplicate added to Section E (High-Stakes & Legal) in February 2024."
+  },
+  {
+    title: "Refund Processing Confirmation Redundancy",
+    t1: 33,
+    t2: 74,
+    rec: "Consolidate into Template 33. Delete Template 74 in Section F (Miscellaneous), which is nearly identical and was added later in December 2023."
+  },
+  {
+    title: "Work Quality and Standards Overlap",
+    t1: 17,
+    t2: 18,
+    rec: "Review and merge. Template 17 (Work Quality Below Expectation) and Template 18 (Work Not Completed to Agreed Standard) cover highly overlapping scenarios. Recommend merging into a single 'Work Quality Issue' template."
+  },
+  {
+    title: "Rescheduling Request Overlap",
+    t1: 51,
+    t2: 52,
+    rec: "Consolidate into a single 'Reschedule Request' template. Template 51 (Homeowner Requesting Reschedule) and Template 52 (Homeowner Date Change Request) are functionally identical."
+  },
+  {
+    title: "Resolution / Outcome Summary Overlap",
+    t1: 37,
+    t2: 57,
+    rec: "Merge. Template 37 (Case Reviewed — Resolution Offered) and Template 57 (Case Reviewed — Outcome Summary) are highly similar. Recommend consolidating into a single standard resolution notice."
+  }
+];
+
+const STATIC_TONE_ISSUES = [
+  {
+    id: 5,
+    critique: "Stiff, passive-aggressive corporate opening ('Please be advised...'). Lacks direct empathy for delay. Sounds like a robotic bot rather than a human representative.",
+    original_quote: "Please be advised that we have received your complaint... Regards, Angi Customer Support",
+    revised_suggested: "Hi [NAME],\n\nI'm sorry to hear your contractor arrived so late today. I know you had a window scheduled, and running late — especially without a heads-up — isn't the experience we want for you.\n\nI've noted this delay on the contractor's account for review. I'd love to hear how the rest of the job went and if there is anything else I can do to make this right.\n\n[AGENT NAME]\nAngi Homeowner Experience"
+  },
+  {
+    id: 14,
+    critique: "Cold compliance disclaimer language ('We are in receipt of...', 'endeavor to provide... Sincerely, Angi Compliance'). Starch and corporate.",
+    original_quote: "We are in receipt of your concern... Sincerely, Angi Compliance and Standards",
+    revised_suggested: "Hi [NAME],\n\nWhat you're describing is a serious concern, and I want to look into it immediately. Every pro on Angi is required to meet background check and licensing standards — and that applies to anyone they send to your home.\n\nI'm escalating this to our compliance team right now. While they run a review of their credentials, please tell me anything else you noticed so we can move quickly.\n\n[AGENT NAME]\nAngi Homeowner Experience"
+  },
+  {
+    id: 22,
+    critique: "Harsh dispute denial template. Uses robotic terms like 'After thorough investigation, we regret to inform you...' and 'denied'.",
+    original_quote: "After thorough investigation, we regret to inform you that your request for a refund has been denied. Our records indicate...",
+    revised_suggested: "Hi [NAME],\n\nI wanted to follow up on your refund request. I reviewed the job details and spoke with the pro, and since the work was completed in line with the original agreement, I won't be able to issue a refund.\n\nI know this isn't what you were hoping to hear, and I want to be direct with you. If there's any specific part of the work you feel wasn't completed, let me know and I'll see what we can do.\n\n[AGENT NAME]\nAngi Homeowner Experience"
+  },
+  {
+    id: 29,
+    critique: "Cold subscription renewal enforcement ('Please be advised...', 'governed by terms... Regards, Angi Membership Services').",
+    original_quote: "Please be advised that membership charges are governed by the terms agreed... Regards, Angi Membership Services",
+    revised_suggested: "Hi [NAME],\n\nI understand you're disputing the membership charge on your account. I want to be upfront: our memberships do renew automatically, but I understand if this caught you by surprise.\n\nI've cancelled the automatic renewal so you won't be charged again. Let's see if we can look into refunding this last charge for you as well — I want to make sure we're treating you fairly.\n\n[AGENT NAME]\nAngi Homeowner Experience"
+  },
+  {
+    id: 36,
+    critique: "Robotic policy explanation ('As per company policy...', 'evaluating on a case-by-case basis... Regards, Angi Support'). Stiff and legalistic.",
+    original_quote: "As per company policy, all refund requests must be... contingent upon... Regards, Angi Support",
+    revised_suggested: "Hi [NAME],\n\nI wanted to share how our refund process works so you know what to expect. Generally, requests need to be submitted within 30 days of the job, and we review them case-by-case based on how much work was completed and what materials were used.\n\nMy goal is to make sure we're being fair to both you and the pro. Once I wrap up my review of your case details, I'll be in touch with a clear answer.\n\n[AGENT NAME]\nAngi Homeowner Experience"
+  },
+  {
+    id: 40,
+    critique: "Stiff escalations disclaimer ('Please be advised that your case has been assigned... assignment is intended to ensure... Regards, Angi Escalations Team').",
+    original_quote: "Please be advised that your case has been assigned to a Resolution Specialist... assignment is intended...",
+    revised_suggested: "Hi [NAME],\n\nI want to make sure your case gets the proper attention, so I'm personally handing it off to one of our Resolution Specialists. They specialize in resolving complex situations and have the authority to make things right.\n\nThey'll review your file and reach out to you within 2 business days. I've briefed them on your case so you won't have to repeat your story.\n\n[AGENT NAME]\nAngi Homeowner Experience"
+  },
+  {
+    id: 60,
+    critique: "Harsh account reactivation boilerplate. Stiff tone ('lifted following the resolution...', 'wish to advise you... Regards, Angi Account Management').",
+    original_quote: "Please be advised that the temporary hold... restored effective immediately... wish to advise you that future occurrences...",
+    revised_suggested: "Hi [NAME],\n\nGood news — the hold on your account has been lifted, and you can log back in starting right now. We resolved the outstanding issue, and your access is fully restored.\n\nWe want to keep your account in good standing, so please review our guidelines to avoid any future issues. Let me know if you run into any trouble logging in!\n\n[AGENT NAME]\nAngi Homeowner Experience"
+  },
+  {
+    id: 77,
+    critique: "Dated and stiff emergency no-show template ('We regret to inform you that your contractor was unable... Rest assured that... Regards, Angi Customer Support'). Overlaps with Templates 1-3.",
+    original_quote: "We regret to inform you that your contractor was unable... Rest assured that this matter has been escalated...",
+    revised_suggested: "Hi [NAME],\n\nI am so sorry to hear the pro didn't show up for your emergency plumbing repair today. When a job is urgent, a no-show is completely unacceptable and dangerous.\n\nI'm treating this as a high-priority escalation and looking for an emergency replacement in your area right now. I'll call you back within 30 minutes with an update.\n\n[AGENT NAME]\nAngi Homeowner Experience"
+  }
+];
+
+function switchWorkspace(ws) {
+  if (ws === 'qa') {
+    document.getElementById('workspace-qa').style.display = 'block';
+    document.getElementById('workspace-library').style.display = 'none';
+    document.getElementById('ws-tab-qa').classList.add('active');
+    document.getElementById('ws-tab-library').classList.remove('active');
+  } else {
+    document.getElementById('workspace-qa').style.display = 'none';
+    document.getElementById('workspace-library').style.display = 'block';
+    document.getElementById('ws-tab-qa').classList.remove('active');
+    document.getElementById('ws-tab-library').classList.add('active');
+    
+    if (templates.length === 0) {
+      preloadLibrary();
+    }
+  }
+}
+
+function switchLibraryTab(tab) {
+  document.querySelectorAll('.lib-tab-content').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.inner-tab').forEach(el => el.classList.remove('active'));
+  
+  if (tab === 'browse') {
+    document.getElementById('lib-content-browse').style.display = 'block';
+    document.getElementById('tab-browse').classList.add('active');
+    renderBrowseTab();
+  } else if (tab === 'audit') {
+    document.getElementById('lib-content-audit').style.display = 'block';
+    document.getElementById('tab-audit').classList.add('active');
+    renderAuditTab();
+  } else if (tab === 'gap-finder') {
+    document.getElementById('lib-content-gap-finder').style.display = 'block';
+    document.getElementById('tab-gap-finder').classList.add('active');
+  }
+}
+
+function handleFileSelect(e) {
+  const files = e.target.files;
+  if (files.length > 0) {
+    parseUploadedFile(files[0]);
+  }
+}
+
+async function parseUploadedFile(file) {
+  const isDocx = file.name.endsWith('.docx');
+  const reader = new FileReader();
+  
+  const preloadBtn = document.getElementById('btn-preload-library');
+  preloadBtn.disabled = true;
+  preloadBtn.innerText = "⏳ Parsing File...";
+  
+  reader.onload = async function(e) {
+    try {
+      let rawText = "";
+      if (isDocx) {
+        const arrayBuffer = e.target.result;
+        const zip = await JSZip.loadAsync(arrayBuffer);
+        const docXml = await zip.file("word/document.xml").async("text");
+        
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(docXml, "application/xml");
+        const paragraphs = xmlDoc.getElementsByTagName("w:p");
+        
+        let extractedLines = [];
+        for (let p of paragraphs) {
+          const texts = p.getElementsByTagName("w:t");
+          let pText = "";
+          for (let t of texts) {
+            pText += t.textContent;
+          }
+          extractedLines.push(pText);
+        }
+        rawText = extractedLines.join("\n");
+      } else {
+        rawText = e.target.result;
+      }
+      
+      processTemplateText(rawText);
+      alert("Successfully loaded and analyzed " + file.name + "!");
+      
+    } catch (err) {
+      console.error(err);
+      alert("Error parsing template document: " + err.message);
+    } finally {
+      preloadBtn.disabled = false;
+      preloadBtn.innerText = "⚡ Preload Marcus's Template Library";
+    }
+  };
+  
+  if (isDocx) {
+    reader.readAsArrayBuffer(file);
+  } else {
+    reader.readAsText(file);
+  }
+}
+
+async function preloadLibrary() {
+  const preloadBtn = document.getElementById('btn-preload-library');
+  preloadBtn.disabled = true;
+  preloadBtn.innerText = "⏳ Downloading Library...";
+  
+  try {
+    const response = await fetch('angi-template-library.docx');
+    if (!response.ok) {
+      throw new Error(`Failed to fetch local template library. Status: ${response.status}`);
+    }
+    const arrayBuffer = await response.arrayBuffer();
+    
+    const zip = await JSZip.loadAsync(arrayBuffer);
+    const docXml = await zip.file("word/document.xml").async("text");
+    
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(docXml, "application/xml");
+    const paragraphs = xmlDoc.getElementsByTagName("w:p");
+    
+    let extractedLines = [];
+    for (let p of paragraphs) {
+      const texts = p.getElementsByTagName("w:t");
+      let pText = "";
+      for (let t of texts) {
+        pText += t.textContent;
+      }
+      extractedLines.push(pText);
+    }
+    const rawText = extractedLines.join("\n");
+    
+    processTemplateText(rawText);
+    
+  } catch (err) {
+    console.error(err);
+    alert("Could not preload template library: " + err.message + "\n\nPlease manually upload 'angi-template-library.docx'.");
+  } finally {
+    preloadBtn.disabled = false;
+    preloadBtn.innerText = "⚡ Preload Marcus's Template Library";
+  }
+}
+
+function processTemplateText(rawText) {
+  const lines = rawText.split('\n');
+  const parsedTemplates = [];
+  
+  let currentSection = "Uncategorized";
+  let currentTemplate = null;
+  let inGaps = false;
+  let customGaps = [];
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) {
+      if (currentTemplate && currentTemplate.text) {
+        currentTemplate.text += "\n";
+      }
+      continue;
+    }
+    
+    if (line.includes("Known Gaps — No Template Exists Yet") || line.includes("Known Gaps")) {
+      inGaps = true;
+      continue;
+    }
+    
+    if (inGaps) {
+      if (line.startsWith("—") || line.startsWith("-") || line.startsWith("*")) {
+        const gapText = line.substring(1).trim();
+        if (gapText) customGaps.push(gapText);
+      }
+      continue;
+    }
+    
+    // Support standard hyphen (-), en-dash (–), and em-dash (—) for sections
+    if (line.match(/^Section\s+[A-Z]\s*[-–—]\s*(.*)$/i)) {
+      currentSection = line;
+      continue;
+    }
+    
+    // Support standard hyphen (-), en-dash (–), and em-dash (—) for templates
+    const tHeaderMatch = line.match(/^Template\s+(\d+)\s*[-–—]\s*(.*)$/i);
+    if (tHeaderMatch) {
+      if (currentTemplate) {
+        parsedTemplates.push(cleanTemplate(currentTemplate));
+      }
+      
+      const num = parseInt(tHeaderMatch[1]);
+      const name = tHeaderMatch[2].trim();
+      
+      currentTemplate = {
+        id: num,
+        section: currentSection,
+        title: line,
+        name: name,
+        useWhen: "",
+        text: "",
+        note: "",
+        warningFlags: []
+      };
+      continue;
+    }
+    
+    if (line.startsWith("Use when:") || line.startsWith("Use When:")) {
+      if (currentTemplate) {
+        currentTemplate.useWhen = line.replace(/Use when:\s*/i, "").trim();
+      }
+      continue;
+    }
+    
+    if (currentTemplate) {
+      // Look for notes, warnings, or Audit notes
+      if (line.includes("⚠") || line.includes("NOTE:") || line.startsWith("Audit note:") || line.includes("redundant") || line.includes("duplicate") || line.includes("Duplicate") || line.includes("overlap") || line.includes("Added ") || line.includes("Written ") || line.includes("Original ")) {
+        currentTemplate.note += (currentTemplate.note ? " " : "") + line;
+      } else {
+        currentTemplate.text += line + "\n";
+      }
+    }
+  }
+  
+  if (currentTemplate) {
+    parsedTemplates.push(cleanTemplate(currentTemplate));
+  }
+  
+  if (parsedTemplates.length === 0) {
+    alert("Warning: No templates could be parsed from this file. Please verify it contains headers like 'Template X - Title'.");
+    return;
+  }
+  
+  // Merge parsed templates into active library instead of overwriting completely
+  if (templates.length === 0) {
+    templates = parsedTemplates;
+  } else {
+    parsedTemplates.forEach(newT => {
+      const idx = templates.findIndex(t => t.id === newT.id);
+      if (idx !== -1) {
+        // Update existing template with newly parsed fields
+        templates[idx] = newT;
+      } else {
+        // Append new unique template
+        templates.push(newT);
+      }
+    });
+    // Sort templates numerically by ID
+    templates.sort((a, b) => a.id - b.id);
+  }
+  
+  localStorage.setItem('parsed_templates', JSON.stringify(templates));
+  document.getElementById('stat-total-templates').innerText = templates.length;
+  
+  analyzeLibraryStructure();
+  renderBrowseTab();
+}
+
+function cleanTemplate(t) {
+  t.text = t.text.trim();
+  t.note = t.note.trim();
+  
+  const isOutdated = STATIC_TONE_ISSUES.some(ti => ti.id === t.id) || 
+                     /tone|stiff|corporate|dated|starch|boilerplate|incomplete|DO NOT SEND|needs rewrite/i.test(t.note) ||
+                     /needs warm rewrite|tone is too corporate/i.test(t.note) ||
+                     t.id === 5 || t.id === 14 || t.id === 22 || t.id === 29 || t.id === 36 || t.id === 40 || t.id === 60 || t.id === 77;
+                     
+  const isDuplicate = STATIC_DUPLICATES.some(d => d.t1 === t.id || d.t2 === t.id) ||
+                      /duplicate|redundant|overlap/i.test(t.note) ||
+                      t.id === 47 || t.id === 68 || t.id === 74;
+                      
+  if (isOutdated) {
+    t.warningFlags.push('tone');
+  }
+  if (isDuplicate) {
+    t.warningFlags.push('duplicate');
+  }
+  return t;
+}
+
+function analyzeLibraryStructure() {
+  const toneCount = templates.filter(t => t.warningFlags.includes('tone')).length;
+  const dupCount = templates.filter(t => t.warningFlags.includes('duplicate')).length;
+  
+  document.getElementById('stat-tone-warnings').innerText = toneCount;
+  document.getElementById('stat-duplicates-count').innerText = Math.max(STATIC_DUPLICATES.length, Math.ceil(dupCount / 2));
+}
+
+function renderBrowseTab() {
+  const container = document.getElementById('templates-list-container');
+  if (templates.length === 0) {
+    container.innerHTML = `
+      <div class="centered-state">
+        <div style="font-size: 32px; color: var(--t3); margin-bottom: 8px;">📂</div>
+        <p class="empty-text">No library loaded yet.</p>
+        <p class="empty-hint">Click the "Preload" button or upload Marcus's response template document to get started.</p>
+      </div>`;
+    return;
+  }
+  
+  const searchVal = document.getElementById('lib-search').value.toLowerCase();
+  const sectionFilter = document.getElementById('lib-filter-section').value;
+  
+  let filtered = templates;
+  
+  if (sectionFilter !== 'all') {
+    filtered = filtered.filter(t => t.section.includes(`Section ${sectionFilter}`));
+  }
+  
+  if (searchVal) {
+    filtered = filtered.filter(t => 
+      t.title.toLowerCase().includes(searchVal) || 
+      t.useWhen.toLowerCase().includes(searchVal) || 
+      t.text.toLowerCase().includes(searchVal) ||
+      String(t.id) === searchVal
+    );
+  }
+  
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="centered-state">
+        <div style="font-size: 32px; color: var(--t3); margin-bottom: 8px;">🔍</div>
+        <p class="empty-text">No matching templates found.</p>
+        <p class="empty-hint">Try adjusting your search keywords or section filter.</p>
+      </div>`;
+    return;
+  }
+  
+  container.innerHTML = filtered.map(t => {
+    let badges = '';
+    if (t.warningFlags.includes('tone')) {
+      badges += `<span class="badge-warning tone">⚠️ Outdated Tone</span>`;
+    }
+    if (t.warningFlags.includes('duplicate')) {
+      badges += `<span class="badge-warning duplicate">⚠️ Redundant / Duplicate</span>`;
+    }
+    
+    return `
+      <div class="template-card" id="tpl-card-${t.id}">
+        <div class="template-card-header">
+          <div class="template-card-title">${escHtml(t.title)}</div>
+          <span class="template-section-badge">${escHtml(t.section.split(' — ')[0])}</span>
+        </div>
+        <div class="template-meta-row">
+          ${badges}
+        </div>
+        ${t.useWhen ? `<div class="template-use-when"><strong>Use when:</strong> ${escHtml(t.useWhen)}</div>` : ''}
+        ${t.note ? `<div style="font-size: 11px; color: var(--amber); margin-bottom: 10px; font-style: italic;">ℹ️ Note: ${escHtml(t.note)}</div>` : ''}
+        <div class="template-text-area" id="tpl-text-${t.id}">${escHtml(t.text)}</div>
+        <div class="template-card-actions">
+          <div style="font-size:11px; color:var(--t3)">Template ID: #${t.id}</div>
+          <div class="card-action-btns">
+            <button class="btn-card-action" onclick="copyTemplateText(${t.id})">Copy Template</button>
+            <button class="btn-card-action primary" onclick="useTemplateInQA(${t.id})">Use in QA Review</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function copyTemplateText(id) {
+  const txt = document.getElementById(`tpl-text-${id}`).innerText;
+  navigator.clipboard.writeText(txt).then(() => {
+    const card = document.getElementById(`tpl-card-${id}`);
+    const copyBtn = card.querySelector('.btn-card-action');
+    copyBtn.innerText = "Copied ✓";
+    copyBtn.style.borderColor = "var(--green)";
+    copyBtn.style.color = "var(--green)";
+    setTimeout(() => {
+      copyBtn.innerText = "Copy Template";
+      copyBtn.style.borderColor = "var(--br2)";
+      copyBtn.style.color = "var(--t2)";
+    }, 1500);
+  });
+}
+
+function useTemplateInQA(id) {
+  const t = templates.find(item => item.id === id);
+  if (!t) return;
+  
+  document.getElementById('sample-selector').value = 'custom';
+  
+  const sectionName = t.section.toLowerCase();
+  let typeVal = "Other Escalation";
+  if (sectionName.includes("refund")) typeVal = "Refund Dispute";
+  else if (sectionName.includes("contractor")) typeVal = "Contractor No-Show";
+  else if (sectionName.includes("legal")) typeVal = "Legal Flag / Liability";
+  else if (sectionName.includes("resolutions")) typeVal = "Service Quality Complaint";
+  
+  document.getElementById('case-type').value = typeVal;
+  document.getElementById('case-context').value = `Use Case: ${t.useWhen || "A homeowner escalation that matches library template: " + t.title}`;
+  document.getElementById('agent-response').value = t.text;
+  document.getElementById('policy-notes').value = t.note || "";
+  
+  updateBtn();
+  switchWorkspace('qa');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function filterTemplates() {
+  renderBrowseTab();
+}
+
+function renderAuditTab() {
+  const container = document.getElementById('audit-results-container');
+  if (templates.length === 0) {
+    container.innerHTML = `
+      <div class="centered-state">
+        <div style="font-size: 32px; color: var(--t3); margin-bottom: 8px;">🔬</div>
+        <p class="empty-text">No library loaded yet.</p>
+        <p class="empty-hint">Preload or upload a template document to see duplicates, outdated tone, and gap reports.</p>
+      </div>`;
+    return;
+  }
+  
+  let duplicatesHTML = STATIC_DUPLICATES.map(d => {
+    const t1 = templates.find(t => t.id === d.t1);
+    const t2 = templates.find(t => t.id === d.t2);
+    
+    if (!t1 || !t2) return '';
+    
+    return `
+      <div class="duplicate-pair-card">
+        <div class="duplicate-pair-header">
+          <div class="duplicate-pair-title">${escHtml(d.title)}</div>
+          <span class="duplicate-pair-badge">Overlapping Templates</span>
+        </div>
+        <div class="duplicate-split-view">
+          <div class="duplicate-split-col">
+            <div class="duplicate-col-title">Template ${t1.id}: ${escHtml(t1.name)}</div>
+            <div class="duplicate-col-text">${escHtml(t1.text)}</div>
+          </div>
+          <div class="duplicate-split-col">
+            <div class="duplicate-col-title">Template ${t2.id}: ${escHtml(t2.name)}</div>
+            <div class="duplicate-col-text">${escHtml(t2.text)}</div>
+          </div>
+        </div>
+        <div class="consolidation-recommendation">
+          <strong>Consolidation Recommendation:</strong> ${escHtml(d.rec)}
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  let toneHTML = STATIC_TONE_ISSUES.map(ti => {
+    const t = templates.find(item => item.id === ti.id);
+    if (!t) return '';
+    
+    return `
+      <div class="tone-issue-card" id="tone-card-${t.id}">
+        <div class="tone-issue-header">
+          <div class="tone-issue-title">Template ${t.id}: ${escHtml(t.name)}</div>
+          <span class="tone-issue-badge">Outdated / Corporate Tone</span>
+        </div>
+        <div class="tone-critique-box">
+          <strong>QA Lead Critique:</strong> ${escHtml(ti.critique)}
+        </div>
+        <div class="tone-split-view">
+          <div class="tone-col-original">
+            <div class="duplicate-col-title">Current Stiff Draft</div>
+            <div style="white-space: pre-wrap;">${escHtml(t.text)}</div>
+          </div>
+          <div class="tone-col-revised" id="tone-revised-box-${t.id}">
+            <div class="duplicate-col-title">Marcus's Human Voice Draft (AI Suggested)</div>
+            <div style="white-space: pre-wrap;" id="tone-revised-text-${t.id}">${escHtml(ti.revised_suggested)}</div>
+            <button class="btn-apply-rewrite" onclick="applyToneRewrite(${t.id})">Replace Template with Revised</button>
+            <button class="btn-card-action" style="margin-top:8px; padding: 4px 8px; font-size:10px;" onclick="runDeepAIRewrite(${t.id})">Custom AI Re-phrase 🤖</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  let gapsHTML = STATIC_KNOWN_GAPS.map((gap, index) => {
+    return `
+      <div class="gap-item-row">
+        <span class="gap-bullet">✦</span>
+        <div style="flex:1;">
+          <strong>Uncovered Case Type:</strong> ${escHtml(gap)}
+          <div style="font-size:11px; color:var(--t3); margin-top:2px;">
+            No response template exists. Go to the <strong>Gap Finder</strong> tab to generate a custom template for this scenario.
+          </div>
+        </div>
+        <button class="btn-card-action" style="padding: 4px 8px; font-size:10px;" onclick="searchGapInFinder(${index})">Generate Draft</button>
+      </div>
+    `;
+  }).join('');
+  
+  container.innerHTML = `
+    <div class="audit-summary-grid">
+      <div class="audit-stat-card">
+        <div class="audit-stat-num blue">${templates.length}</div>
+        <div class="audit-stat-label">Total Templates</div>
+      </div>
+      <div class="audit-stat-card">
+        <div class="audit-stat-num red">${STATIC_DUPLICATES.length}</div>
+        <div class="audit-stat-label">Duplicate Pairs</div>
+      </div>
+      <div class="audit-stat-card">
+        <div class="audit-stat-num amber">${STATIC_TONE_ISSUES.filter(ti => templates.find(temp => temp.id === ti.id && temp.warningFlags.includes('tone'))).length}</div>
+        <div class="audit-stat-label">Outdated Tones</div>
+      </div>
+      <div class="audit-stat-card">
+        <div class="audit-stat-num red">${STATIC_KNOWN_GAPS.length}</div>
+        <div class="audit-stat-label">Critical Gaps</div>
+      </div>
+    </div>
+    
+    <div class="audit-section-block">
+      <div class="audit-section-header">Redundancies & Overlaps</div>
+      <div class="audit-subtext">
+        These templates are duplicates or cover identical scenarios. Marcus should delete or merge them to keep the library concise and avoid agent confusion.
+      </div>
+      ${duplicatesHTML}
+    </div>
+    
+    <div class="audit-section-block">
+      <div class="audit-section-header">Stiff & Corporate Tone Warnings</div>
+      <div class="audit-subtext">
+        These templates use old, formal, robotic boilerplate language. They should be rewritten to match Marcus's empathetic, conversational, and human-sounding guidelines.
+      </div>
+      ${toneHTML}
+    </div>
+    
+    <div class="audit-section-block">
+      <div class="audit-section-header">Response Coverage Gaps</div>
+      <div class="audit-subtext">
+        These case types have been identified as having zero template coverage. Agents currently write these from scratch, leading to QA inconsistencies.
+      </div>
+      <div style="background:var(--s1); border:1px solid var(--br); border-radius:12px; overflow:hidden;">
+        ${gapsHTML}
+      </div>
+    </div>
+  `;
+}
+
+function applyToneRewrite(id) {
+  const t = templates.find(item => item.id === id);
+  const revisedText = document.getElementById(`tone-revised-text-${id}`).innerText;
+  if (t && revisedText) {
+    t.text = revisedText;
+    t.warningFlags = t.warningFlags.filter(f => f !== 'tone');
+    
+    localStorage.setItem('parsed_templates', JSON.stringify(templates));
+    alert(`Template ${id} has been updated in memory with Marcus's human voice!`);
+    
+    analyzeLibraryStructure();
+    renderAuditTab();
+    renderBrowseTab();
+  }
+}
+
+async function runDeepAIRewrite(id) {
+  const t = templates.find(item => item.id === id);
+  if (!t) return;
+  
+  const revisedBox = document.getElementById(`tone-revised-box-${id}`);
+  const originalHtml = revisedBox.innerHTML;
+  revisedBox.innerHTML = `<div class="spinner" style="margin: 20px auto;"></div><div style="font-size:11px; text-align:center; color:var(--t2)">AI Rephrasing template...</div>`;
+  
+  try {
+    const data = await callGroqAPI([
+      {
+        role: 'system',
+        content: "You are Marcus, an experienced Homeowner Experience CX Team Lead at Angi. You coach agents to sound empathetic, direct, human, and professional — never robotic, cold, or passive-aggressive. Rewrite the user's template to match this tone. Maintain any bracketed placeholders like [NAME], [CONTRACTOR], or [AMOUNT]. Keep the response format intact. Return only the revised template text with no explanations, no markdown styling, and no surrounding text. Just the draft."
+      },
+      {
+        role: 'user',
+        content: `Original template text:\n\n${t.text}`
+      }
+    ], 'llama-3.3-70b-versatile', 1000, 0.3);
+    
+    const raw = data.choices[0].message.content.trim();
+    revisedBox.innerHTML = `
+      <div class="duplicate-col-title">Marcus's Human Voice Draft (AI Suggested)</div>
+      <div style="white-space: pre-wrap;" id="tone-revised-text-${t.id}">${escHtml(raw)}</div>
+      <button class="btn-apply-rewrite" onclick="applyToneRewrite(${t.id})">Replace Template with Revised</button>
+      <button class="btn-card-action" style="margin-top:8px; padding: 4px 8px; font-size:10px;" onclick="runDeepAIRewrite(${t.id})">Regenerate 🤖</button>
+    `;
+    
+  } catch (err) {
+    alert("Error rephrasing template: " + err.message);
+    revisedBox.innerHTML = originalHtml;
+  }
+}
+
+function searchGapInFinder(index) {
+  const gapName = STATIC_KNOWN_GAPS[index];
+  switchLibraryTab('gap-finder');
+  document.getElementById('gap-scenario-input').value = gapName;
+  runGapFinder();
+}
+
+async function runGapFinder() {
+  const scenario = document.getElementById('gap-scenario-input').value.trim();
+  if (!scenario) {
+    alert("Please enter a customer scenario or edge case description first.");
+    return;
+  }
+  
+  const resultsBox = document.getElementById('gap-finder-results-box');
+  const btn = document.getElementById('btn-run-gap-finder');
+  const label = document.getElementById('gap-btn-label');
+  const spinner = document.getElementById('gap-btn-spinner');
+  
+  btn.disabled = true;
+  label.style.display = 'none';
+  spinner.style.display = 'block';
+  resultsBox.style.display = 'block';
+  resultsBox.innerHTML = `
+    <div class="centered-state">
+      <div class="spinner"></div>
+      <div class="loading-text">Analyzing library and generating template...</div>
+    </div>
+  `;
+  
+  const libraryIndex = templates.map(t => `#${t.id}: ${t.name} (Use when: ${t.useWhen})`).join('\n');
+  
+  const systemPrompt = `You are an AI assistant helping Marcus, the Homeowner Experience CX Team Lead at Angi.
+Marcus has a library of response templates. A user will input a new customer scenario. Your job is to check if this scenario is already covered by an existing template in the library index, or if it represents a coverage gap.
+
+If it is covered, state which template covers it and explain why.
+If it is a gap, confirm it is a gap, explain why, and draft a new template that follows Marcus's guidelines:
+1. Warm, empathetic, human-sounding tone (avoid cold corporate boilerplate like 'Please be advised', 'We regret to inform you').
+2. Uses standard bracketed placeholders for variable fields (e.g. [NAME], [CONTRACTOR], [TIMEFRAME], [AGENT NAME]).
+3. Includes an 'Agent Name' and 'Angi Homeowner Experience' signature.
+
+You MUST return ONLY a valid JSON object with no markdown wrappers, no backticks, and no extra text. Raw JSON only.
+
+JSON Structure:
+{
+  "is_covered": <true/false>,
+  "matched_template_id": <number or null>,
+  "explanation": "<brief explanation of your determination>",
+  "draft_title": "<Suggest a short descriptive template title, e.g. 'Template 81 — Contractor Accused of Theft'>",
+  "draft_use_case": "<Suggest a 'Use when' condition for this template>",
+  "draft_text": "<The full response template draft. Use natural paragraphs and bracketed placeholders. Warm and empathetic.>"
+}`;
+
+  try {
+    const data = await callGroqAPI([
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: `Parsed Templates in Library:\n${libraryIndex || "None preloaded yet. Assume empty library."}\n\nNew Customer Scenario:\n${scenario}` }
+    ], 'llama-3.3-70b-versatile', 1200, 0.2);
+    
+    const raw = data.choices[0].message.content;
+    const clean = extractJSON(raw);
+    const parsed = JSON.parse(clean);
+    
+    renderGapFinderResults(parsed);
+    
+  } catch (err) {
+    resultsBox.innerHTML = `<div class="error-box">⚠ Error running Gap Finder: ${escHtml(err.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+    label.style.display = '';
+    spinner.style.display = 'none';
+  }
+}
+
+function renderGapFinderResults(data) {
+  const box = document.getElementById('gap-finder-results-box');
+  
+  if (data.is_covered && data.matched_template_id) {
+    const match = templates.find(t => t.id === data.matched_template_id);
+    box.innerHTML = `
+      <div class="gap-result-alert matched">
+        <span style="font-size: 18px; margin-top:2px;">✅</span>
+        <div>
+          <strong>Scenario is covered!</strong><br>
+          This scenario matches <strong>Template ${data.matched_template_id}: ${match ? match.name : 'Existing Template'}</strong>.<br>
+          <span style="font-size:12px; opacity:0.9; display:block; margin-top:4px;"><strong>AI Analysis:</strong> ${escHtml(data.explanation)}</span>
+        </div>
+      </div>
+      
+      <div class="panel-label" style="margin-top:16px;">Matching Library Template</div>
+      <div class="gap-result-template-draft" id="gap-matched-text">${match ? escHtml(match.text) : ''}</div>
+      <button class="btn-card-action primary" onclick="copyGapFinderMatch()">Copy Template Text</button>
+    `;
+  } else {
+    box.innerHTML = `
+      <div class="gap-result-alert gap">
+        <span style="font-size: 18px; margin-top:2px;">⚠️</span>
+        <div>
+          <strong>Coverage Gap Confirmed!</strong><br>
+          No matching template covers this scenario in your current library.<br>
+          <span style="font-size:12px; opacity:0.9; display:block; margin-top:4px;"><strong>AI Analysis:</strong> ${escHtml(data.explanation)}</span>
+        </div>
+      </div>
+      
+      <div class="panel-label">Suggested New Template</div>
+      <div class="template-card" style="border-color: var(--amber); box-shadow: 0 4px 12px rgba(251,191,36,0.06);">
+        <div class="template-card-header">
+          <div class="template-card-title" id="gap-draft-title">${escHtml(data.draft_title)}</div>
+          <span class="template-section-badge">New Gap Template</span>
+        </div>
+        <div class="template-use-when" style="border-left-color: var(--amber);">
+          <strong>Use when:</strong> <span id="gap-draft-use">${escHtml(data.draft_use_case)}</span>
+        </div>
+        <div class="template-text-area" style="background:#fffbeb; border-color:#fde68a;" id="gap-draft-text">${escHtml(data.draft_text)}</div>
+        <div class="template-card-actions">
+          <div style="font-size:11px; color:var(--t3)">Suggested Addition</div>
+          <div class="card-action-btns">
+            <button class="btn-card-action" onclick="copyGapFinderDraft()">Copy Template</button>
+            <button class="btn-card-action primary" onclick="addGapDraftToLibrary()">Add to Active Library</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function copyGapFinderMatch() {
+  const txt = document.getElementById('gap-matched-text').innerText;
+  navigator.clipboard.writeText(txt).then(() => {
+    alert("Template text copied to clipboard!");
+  });
+}
+
+function copyGapFinderDraft() {
+  const txt = document.getElementById('gap-draft-text').innerText;
+  navigator.clipboard.writeText(txt).then(() => {
+    alert("New template text copied to clipboard!");
+  });
+}
+
+function addGapDraftToLibrary() {
+  const title = document.getElementById('gap-draft-title').innerText;
+  const useWhen = document.getElementById('gap-draft-use').innerText;
+  const text = document.getElementById('gap-draft-text').innerText;
+  
+  const newId = templates.length > 0 ? Math.max(...templates.map(t => t.id)) + 1 : 81;
+  const newTpl = {
+    id: newId,
+    section: "Section F — Miscellaneous / Added Later",
+    title: `Template ${newId} — ${title.replace(/^Template\s+\d+\s*—\s*/i, '')}`,
+    name: title.replace(/^Template\s+\d+\s*—\s*/i, ''),
+    useWhen: useWhen,
+    text: text,
+    note: "Added via Gap Finder",
+    warningFlags: []
+  };
+  
+  templates.push(newTpl);
+  
+  localStorage.setItem('parsed_templates', JSON.stringify(templates));
+  document.getElementById('stat-total-templates').innerText = templates.length;
+  
+  alert(`Successfully added '${title}' as Template #${newId}! It is now available in your Browse Library tab.`);
+  
+  renderBrowseTab();
+  switchLibraryTab('browse');
+}
+
+// Drag & Drop Setup
+window.addEventListener('DOMContentLoaded', () => {
+  const dropZone = document.getElementById('drop-zone');
+  if (dropZone) {
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        parseUploadedFile(files[0]);
+      }
+    });
+  }
+  
+  // Auto-load cached templates from localStorage if they exist
+  const cached = localStorage.getItem('parsed_templates');
+  if (cached) {
+    try {
+      templates = JSON.parse(cached);
+      document.getElementById('stat-total-templates').innerText = templates.length;
+      analyzeLibraryStructure();
+      renderBrowseTab();
+    } catch (e) {
+      console.error("Error parsing cached templates", e);
+    }
+  }
+});
+</script>
+</body>
+</html>
